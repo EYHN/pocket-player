@@ -1,0 +1,8 @@
+{
+  "0.15": {
+    "tag": "v0.15.0",
+    "commit": "96e5f4084c2da45d72997c443fd478bcffb92dc7",
+    "npm": "0.15.0",
+    "wasmSha256": "18207ac3ac982fc04f8366cdf64c06ae944dc4b703117a171299c48beffa46d8"
+  }
+}
