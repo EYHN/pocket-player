@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pocket-player core</title>
+<style>
+  body { margin: 0; background: #000; display: grid; place-items: center; min-height: 100vh; }
+  canvas { width: min(100vw, 960px); image-rendering: pixelated; }
+</style>
+</head>
+<body>
+<!-- The core without a shell, as a native host uses it: the host sizes the canvas and sends the keys. -->
+<canvas id="screen"></canvas>
+<script type="module">
+  import { mount, BTN } from "../dist/0.15/core.js";
+  const app = await mount({ pocket: "counter.pocket", canvas: document.getElementById("screen") });
+  window.pocketCore = app;
+  // ?press=cross taps CROSS three times, each press and release held for a few frames.
+  const after = (count) => new Promise((done) => {
+    const until = app.frames + count;
+    const wait = () => (app.frames >= until ? done() : requestAnimationFrame(wait));
+    wait();
+  });
+  if (new URLSearchParams(location.search).get("press") === "cross") {
+    for (let i = 0; i < 3; i++) {
+      app.input(BTN.CROSS);
+      await after(3);
+      app.input(0);
+      await after(3);
+    }
+    document.body.dataset.pressed = "3";
+  }
+</script>
+</body>
+</html>

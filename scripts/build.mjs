@@ -6,7 +6,7 @@
 // It lays out the files a page loads the way PocketJS's `bun tools/pocket3d-web.ts stage` does —
 // the Pocket3D player's modules, the handheld shells, the guest realm, the UI core — from the pinned
 // tag, takes the prebuilt UI core from the pinned npm package (checked against its SHA-256), bundles
-// the two framework modules the player imports with esbuild, and adds src/player.js beside them.
+// the two framework modules the player imports with esbuild, and adds src/core.js and src/player.js beside them.
 // Needs git, npm and network access; nothing of PocketJS is installed.
 
 import { execFileSync } from "node:child_process";
@@ -64,7 +64,7 @@ try {
   cpSync(join(src, "LICENSE"), join(out, "LICENSE-PocketJS.txt"));
   cpSync(join(src, "pocket3d/LICENSE"), join(out, "LICENSE-Pocket3D.txt"));
   cpSync(join(ROOT, "LICENSE"), join(out, "LICENSE-pocket-player.txt"));
-  cpSync(join(ROOT, "src/player.js"), join(out, "player.js"));
+  for (const file of ["core.js", "player.js"]) cpSync(join(ROOT, "src", file), join(out, file));
   writeFileSync(join(out, "NOTICE.md"), readFileSync(join(ROOT, "NOTICE.md"), "utf8").replaceAll("{tag}", pin.tag).replaceAll("{commit}", pin.commit).replaceAll("{npm}", pin.npm));
 
   const files = [];

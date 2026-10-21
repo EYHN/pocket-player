@@ -24,6 +24,27 @@ picker and the guest realm are PocketJS's own Pocket3D player, the one behind
 2D apps only for now. A Pocket3D game also needs its own scene renderer, and `play` is where one
 will join. When it does, the Pocket3D title card plays, as the Pocket3D License asks.
 
+## Without the shell
+
+A host that draws the handheld itself, such as a native app around a web view, uses `core.js`.
+It runs the app on a canvas and takes the input it is given:
+
+```js
+import { mount, BTN } from "./pocket-player/0.15/core.js";
+const app = await mount({ pocket: "app.pocket", canvas, layout: (screen) => resize(screen) });
+app.input(BTN.CROSS | BTN.LEFT, [{ id: 0, x: 120, y: 80 }]); // held until the next call
+```
+
+- `app.devices` lists the package's devices. `app.present(id)` switches to another, and calls
+  `layout` first with its screen: `width`, `height`, `lower` (a 3DS's lower screen), `sticks`,
+  `glyphs`, `touch` and `viewport`.
+- `input(buttons, contacts)` takes PocketJS's button bits (`BTN`) and touch contacts in the
+  screen's logical pixels. Pass `lower: () => context` to draw a 3DS's lower screen.
+- `capture()`, `frames`, `ready`, `failure` and `close()` are also there.
+
+`play()` is this core with the Pocket3D shell around it. `example/core.html` is a page with only
+the core.
+
 ## Serving it
 
 Serve `dist/<line>/` from **the page's own origin**. The player reads a frame of that directory and
